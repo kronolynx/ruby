@@ -1,5 +1,6 @@
 require "bunny"
 require 'digest/md5'
+require 'sha3'
 #require 'msgpack'
 require 'msgpack/rpc'
 require "event_emitter"
@@ -14,16 +15,24 @@ class Stampery
 
     def initialize(secret, branch = 'prod')
         @clientId = Digest::MD5.hexdigest(secret[0,15])
-        puts @clientId
+    end
+
+    def start
+    end
+
+    def stamp
+    end
+
+    def hash data
+        SHA3::Digest.hexdigest(:sha224, data).upcase
     end
 
     private
-    def apiLogin(endpoint)
-        @apiClient = new Client(endpoint[0], endpoint[1])
-        @auth = @apiClient.call('stampery.3.auth', [@clientId, @clientSecret])
+    def apiLogin endpoint
+
     end
 
-    def amqpLogin(endpoint)
+    def amqpLogin endpoint
 
     end
 end
