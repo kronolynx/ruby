@@ -1,12 +1,9 @@
 # Stampery Ruby
  Stampery API for Ruby. Notarize all your data using the blockchain!
 
- [![License](https://poser.pugx.org/stampery/php/license)](https://packagist.org/packages/stampery/php)
 
  ## Getting Started
 
- # Usage
- # WIP
 
  ```
  bundler require stampery/ruby
