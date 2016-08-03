@@ -7,7 +7,7 @@ require "event_emitter"
 
 class Stampery
     include EventEmitter
-    @@apiEndpoints = {'prod' => ['192.168.1.52', 4000],
+    @@apiEndpoints = {'prod' => ['api.stampery.com', 4000],
                      'beta' => ['api-beta.stampery.com', 4000]}
     @@amqpEndpoints = {'prod' => ['young-squirrel.rmq.cloudamqp.com', 5672, 'consumer', '9FBln3UxOgwgLZtYvResNXE7', 'ukgmnhoi'],
                       'beta' => ['young-squirrel.rmq.cloudamqp.com', 5672, 'consumer', '9FBln3UxOgwgLZtYvResNXE7', 'beta']}
