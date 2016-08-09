@@ -43,7 +43,7 @@ class Stampery
         req = @apiClient.call_async('stampery.3.auth', @clientId, @clientSecret)
         req.join
         @auth = req.result
-        puts "logged #{@clientId} Auth #{@auth}"
+        puts "logged #{@clientId}"
     end
 
     def amqpLogin endpoint
