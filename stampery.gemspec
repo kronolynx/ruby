@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["johann@stampery.com"]
 
   spec.summary       = %q{Stampery API for Ruby}
-  spec.description   = %q{Notarize all your data using the blockchain!.}
+  spec.description   = %q{Stampery API wrapper for Ruby. Notarize all your data using the blockchain!.}
   spec.homepage      = "https://github.com/stampery/ruby"
   spec.license       = "MIT"
 
