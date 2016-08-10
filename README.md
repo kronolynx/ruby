@@ -1,30 +1,46 @@
-# Stampery Ruby
- Stampery API for Ruby. Notarize all your data using the blockchain!
+# Stampery
+Stampery API for Ruby. Notarize all your data using the blockchain!
 
-# Usage
+## Installation
+
+Add this line to your application's Gemfile:
+
 ```ruby
-require_relative 'index'
+gem 'stampery'
+```
 
-stampery = Stampery.new('2d4cdee7-38b0-4a66-da87-c1ab05b43768', 'prod')
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install stampery
+
+## Usage
+
+require 'stampery'
+
+stampery = Client.new '2d4cdee7-38b0-4a66-da87-c1ab05b43768', 'prod'
 
 stampery.on :proof do |hash, proof|
-    puts("\nReceived proof for \n#{hash} \n\n Proof\n#{proof}");
+  puts 'Received proof for'
+  puts hash
+  puts 'Proof'
+  puts proof.to_s
 end
 
 stampery.on :error do |err|
-    puts "Woot: #{err}"
+  puts "Woot: #{err}"
 end
 
 stampery.on :ready do
-    digest = stampery.hash("Hello, blockchain!")
-    stampery.stamp(digest)
+  digest = stampery.hash 'Hello, blockchain!'
+  stampery.stamp digest
 end
 
-stampery.start()
+stampery.start
 
- ```
-## Installation
-Coming soon
 
 # Official implementations
 - [NodeJS](https://github.com/stampery/node)
