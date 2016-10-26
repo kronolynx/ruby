@@ -5,7 +5,7 @@ require 'stampery/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "stampery"
-  spec.version       = "0.1.0"
+  spec.version       = "0.1.1"
   spec.authors       = ["Johann Ortiz"]
   spec.email         = ["johann@stampery.com"]
 
@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "sha3", "~> 1.0", ">= 1.0.1"
   spec.add_dependency "msgpack-rpc", "~> 0.5.4"
-  spec.add_dependency "bunny", ">= 2.2.2"
+  spec.add_dependency "bunny", '~> 2.2', ">= 2.2.2"
   spec.add_dependency "event_emitter", "~> 0.2.5"
 
   spec.add_development_dependency "bundler", "~> 1.12"

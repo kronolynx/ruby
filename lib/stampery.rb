@@ -4,6 +4,7 @@ require 'digest/md5'
 require 'sha3'
 require 'msgpack/rpc'
 require 'event_emitter'
+require 'rubygems'
 
 class Client
   include EventEmitter
@@ -41,7 +42,8 @@ class Client
 
   def api_login end_point
     @api_client = MessagePack::RPC::Client.new(end_point[0], end_point[1])
-    req = @api_client.call_async('stampery.3.auth', @client_id, @client_secret)
+    user_agent = "ruby-#{Gem::Specification::load("stampery.gemspec").version}"
+    req = @api_client.call_async('stampery.3.auth', @client_id, @client_secret, user_agent)
     req.join
     @auth = req.result
     puts "logged #{@client_id}"
