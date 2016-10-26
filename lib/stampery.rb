@@ -22,7 +22,9 @@ class Client
 
   def start
     api_login @api_end_point
-    amqp_login @amqp_end_point
+    if @auth
+      amqp_login @amqp_end_point
+    end
   end
 
   def stamp data
@@ -46,7 +48,11 @@ class Client
     req = @api_client.call_async('stampery.3.auth', @client_id, @client_secret, user_agent)
     req.join
     @auth = req.result
-    puts "logged #{@client_id}"
+    if @auth
+      puts "logged #{@client_id}"
+    else
+      emit :error, "Couldn't log in"
+    end
   end
 
   def amqp_login end_point
