@@ -13,7 +13,7 @@ class Client
   @@amqp_end_points = { 'prod' => ['young-squirrel.rmq.cloudamqp.com', 5672, 'consumer', '9FBln3UxOgwgLZtYvResNXE7', 'ukgmnhoi'],
                         'beta' => ['young-squirrel.rmq.cloudamqp.com', 5672, 'consumer', '9FBln3UxOgwgLZtYvResNXE7', 'beta'] }
 
-  def initialize secret, branch = 'prod'
+  def initialize(secret, branch = 'prod')
     @client_secret = secret
     @client_id = Digest::MD5.hexdigest(secret)[0, 15]
     @api_end_point = @@api_end_points[branch] || @@api_end_points['prod']
@@ -22,12 +22,10 @@ class Client
 
   def start
     api_login @api_end_point
-    if @auth
-      amqp_login @amqp_end_point
-    end
+    amqp_login @amqp_end_point if @auth
   end
 
-  def stamp data
+  def stamp(data)
     puts "Stamping \n#{data}"
     begin
       @api_client.call 'stamp', data.upcase
@@ -36,15 +34,15 @@ class Client
     end
   end
 
-  def hash data
+  def hash(data)
     SHA3::Digest.hexdigest(:sha512, data).upcase
   end
 
   private
 
-  def api_login end_point
+  def api_login(end_point)
     @api_client = MessagePack::RPC::Client.new(end_point[0], end_point[1])
-    user_agent = "ruby-#{Gem::Specification::load("stampery.gemspec").version}"
+    user_agent = "ruby-#{Gem::Specification.load('stampery.gemspec').version}"
     req = @api_client.call_async('stampery.3.auth', @client_id, @client_secret, user_agent)
     req.join
     @auth = req.result
@@ -55,7 +53,7 @@ class Client
     end
   end
 
-  def amqp_login end_point
+  def amqp_login(end_point)
     amqp_conn = Bunny.new(automatically_recover: true, host: end_point[0],
                           port: end_point[1], user: end_point[2],
                           pass: end_point[3], vhost: end_point[4])
@@ -69,11 +67,16 @@ class Client
     begin
       queue.subscribe(block: true) do |delivery_info, _metadata, queueMsg|
         hash = delivery_info.routing_key
-        proof = MessagePack.unpack queueMsg
+        proof = process_proof MessagePack.unpack queueMsg
         emit :proof, hash, proof
       end
     rescue Exception => _
       puts "\n\nClosing the client"
     end
+  end
+
+  def process_proof(raw_proof)
+    Hash['version' => raw_proof[0], 'siblings' => raw_proof[1], 'root' => raw_proof[2],
+         'anchor' => Hash['chain' => raw_proof[3][0], 'tx' => raw_proof[3][1]]]
   end
 end

@@ -4,10 +4,10 @@ require 'stampery'
 stampery = Client.new 'user-secret'
 
 stampery.on :proof do |hash, proof|
-  puts 'Received proof for'
-  puts hash
+  puts "Received proof for \n#{hash}\n\n"
   puts 'Proof'
-  puts proof.to_s
+  puts "Version: #{proof['version']}\nSiblings: #{proof['siblings']}\nRoot: #{proof['root']}"
+  puts "Anchor:\n  Chain: #{proof['anchor']['chain']}\n  Tx: #{proof['anchor']['tx']}\n"
 end
 
 stampery.on :error do |err|
