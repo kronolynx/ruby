@@ -38,7 +38,32 @@ class Client
     SHA3::Digest.hexdigest(:sha512, data).upcase
   end
 
+  def prove(hash, proof)
+    validate hash, proof['siblings'], proof['root']
+  end
+
   private
+
+  def validate(hash, siblings, root)
+    if siblings.size > 0
+      mixed = mix hash, siblings[0]
+      return validate(mixed, siblings[1..-1], root)
+    end
+    hash == root
+  end
+
+  def mix(a, b)
+    a = hex_to_bin a
+    b = hex_to_bin b
+    commuted = a > b ? a + b : b + a
+    hash commuted
+  end
+
+  # Take the hex digits two at a time (since each byte can range from 00 to FF),
+  # convert the digits to a character, and join them back together
+  def hex_to_bin(s)
+    s.scan(/../).map { |x| x.hex.chr }.join
+  end
 
   def api_login(end_point)
     @api_client = MessagePack::RPC::Client.new(end_point[0], end_point[1])
